@@ -8,6 +8,8 @@ ARG GID=1000
 ARG USERNAME=php
 ARG GROUPNAME=php
 
+ENV USERNAME=$USERNAME
+
 RUN set -xe \
     && apt-get -y update && apt-get -y install wget git vim \
     && wget https://git.io/psysh -O /usr/bin/psysh \
@@ -18,12 +20,16 @@ RUN set -xe \
     
 RUN set -xe \
     && groupadd -r -g ${GID} ${GROUPNAME} \
-    && useradd -r -m -d ${ROOT_DIR} -u ${UID} -g ${GROUPNAME} -s /bin/bash ${USERNAME}
+    && useradd -r -m -u ${UID} -g ${GROUPNAME} -s /bin/bash ${USERNAME} \
+    && mkdir -p $ROOT_DIR && chown -R $USERNAME:$GROUPNAME $ROOT_DIR
 
 COPY ./install-composer.sh /tmp/install-composer.sh
 RUN set -xe \
     && bash /tmp/install-composer.sh --install-dir=/usr/bin --filename=composer
 
-USER ${USERNAME}
+COPY ./docker-entrypoint.sh /entrypoint
+
+ENTRYPOINT ["/entrypoint"]
+
 WORKDIR $ROOT_DIR
-CMD ["/usr/bin/psysh"]
+CMD ["su-exec", "$USERNAME", "/usr/bin/psysh"]
