@@ -11,7 +11,7 @@ ARG GROUPNAME=php
 ENV USERNAME=$USERNAME
 
 RUN set -xe \
-    && apt-get -y update && apt-get -y install wget git vim \
+    && apt-get -y update && apt-get -y install wget git vim unzip \
     && wget https://git.io/psysh -O /usr/bin/psysh \
     && chmod +x /usr/bin/psysh \
     && (git clone https://github.com/ncopa/su-exec /tmp/su-exec \
@@ -32,4 +32,4 @@ COPY ./docker-entrypoint.sh /entrypoint
 ENTRYPOINT ["/entrypoint"]
 
 WORKDIR $ROOT_DIR
-CMD ["su-exec", "$USERNAME", "/usr/bin/psysh"]
+CMD ["/usr/bin/psysh"]
