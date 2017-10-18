@@ -2,6 +2,7 @@
     "require": {
         "lstrojny/functional-php": "^1.6",
         "nikic/iter": "^1.5",
-        "widmogrod/php-functional": "^3.0"
+        "widmogrod/php-functional": "^3.0",
+        "dusank/knapsack": "^10.0"
     }
 }
